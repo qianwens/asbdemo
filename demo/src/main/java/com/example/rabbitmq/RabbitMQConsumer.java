@@ -1,20 +1,18 @@
 package com.example.rabbitmq;
 
-import com.rabbitmq.client.*;
+import com.awsomeasb.AwsomeMQClient;
+import com.awsomeasb.DeliverCallback;
 import com.example.websocket.NewsWebSocket;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 @WebListener
 public class RabbitMQConsumer implements ServletContextListener {
     
-    private static final String RABBITMQ_HOST = "localhost";
     private static final String QUEUE_NAME = "news";
-    private Connection connection;
-    private Channel channel;
+    private AwsomeMQClient client;
+    private String consumerTag;
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -22,30 +20,28 @@ public class RabbitMQConsumer implements ServletContextListener {
         System.out.println("RabbitMQConsumer: Starting initialization...");
         System.out.println("========================================");
         try {
-            // Create connection to RabbitMQ
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(RABBITMQ_HOST);
-            // Optional: Set username and password if required
-            // factory.setUsername("guest");
-            // factory.setPassword("guest");
+            // Get Azure Service Bus connection string from environment
+            String connectionString = System.getenv("AZURE_SERVICEBUS_CONNECTION_STRING");
             
-            System.out.println("Connecting to RabbitMQ at " + RABBITMQ_HOST + "...");
-            connection = factory.newConnection();
-            channel = connection.createChannel();
-            System.out.println("✓ Connected to RabbitMQ successfully!");
+            if (connectionString == null || connectionString.isEmpty()) {
+                System.err.println("WARNING: AZURE_SERVICEBUS_CONNECTION_STRING not set. Using default for testing.");
+                connectionString = "Endpoint=sb://localhost.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=test";
+            }
             
-            // Declare queue (idempotent)
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            System.out.println("✓ Queue '" + QUEUE_NAME + "' declared");
+            System.out.println("Connecting to Azure Service Bus...");
+            client = new AwsomeMQClient(connectionString, QUEUE_NAME);
+            System.out.println("✓ Connected to Azure Service Bus successfully!");
             
-            System.out.println("✓ Waiting for messages from RabbitMQ queue: " + QUEUE_NAME);
+            System.out.println("✓ Queue '" + QUEUE_NAME + "' configured");
+            
+            System.out.println("✓ Waiting for messages from Azure Service Bus queue: " + QUEUE_NAME);
             System.out.println("========================================");
             
             // Set up consumer
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                String message = new String(delivery.getBody(), "UTF-8");
+            DeliverCallback deliverCallback = (tag, delivery) -> {
+                String message = delivery.getBodyAsString();
                 System.out.println("========================================");
-                System.out.println(">>> Received from RabbitMQ: " + message);
+                System.out.println(">>> Received from Azure Service Bus: " + message);
                 
                 // Broadcast to all connected WebSocket clients
                 try {
@@ -58,15 +54,15 @@ public class RabbitMQConsumer implements ServletContextListener {
                 System.out.println("========================================");
             };
             
-            channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
+            consumerTag = client.basicConsume(QUEUE_NAME, true, deliverCallback);
             
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             System.err.println("========================================");
-            System.err.println("ERROR: Failed to connect to RabbitMQ!");
+            System.err.println("ERROR: Failed to connect to Azure Service Bus!");
             System.err.println("========================================");
             e.printStackTrace();
-            System.err.println("Error connecting to RabbitMQ: " + e.getMessage());
-            System.err.println("Make sure RabbitMQ is running: docker ps");
+            System.err.println("Error connecting to Azure Service Bus: " + e.getMessage());
+            System.err.println("Make sure AZURE_SERVICEBUS_CONNECTION_STRING is set");
             System.err.println("========================================");
         }
     }
@@ -74,14 +70,14 @@ public class RabbitMQConsumer implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         try {
-            if (channel != null && channel.isOpen()) {
-                channel.close();
+            if (consumerTag != null && client != null) {
+                client.basicCancel(consumerTag);
             }
-            if (connection != null && connection.isOpen()) {
-                connection.close();
+            if (client != null) {
+                client.close();
             }
-            System.out.println("RabbitMQ connection closed");
-        } catch (IOException | TimeoutException e) {
+            System.out.println("Azure Service Bus connection closed");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

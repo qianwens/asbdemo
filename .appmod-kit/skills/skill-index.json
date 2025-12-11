@@ -2,7 +2,7 @@
   "custom":   [
     {
       "description": "Migrate from RabbitMQ with AMQP to Azure Service Bus for messaging.",
-      "path": ".appmod-kit/custom/skills/rabitmq-to-azureservicebus/skill.md",
+      "path": ".appmod-kit/custom/skills/rabbitmq-to-azureservicebus",
       "name": "Migrate from RabbitMQ to Azure Service Bus"
     }
   ],

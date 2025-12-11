@@ -11,6 +11,8 @@ This document provides comprehensive instructions for migrating from RabbitMQ to
 
 ### Maven Project
 
+copy file awesomeasb-1.0.0.jar to classpath.
+
 Add to your `pom.xml`:
 
 ```xml

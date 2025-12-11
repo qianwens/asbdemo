@@ -118,7 +118,7 @@ graph TB
 - Group related changes that serve a single user goal into one task (e.g., all changes needed to migrate to PostgreSQL)
 - Each task should be independently testable with integration tests
 - Do not add tests for unimpacted code or existing functionality unless user requested
-- Look into the skill definitions in `.appmod-kit/skills/skill-index.json` to find relevant skills that can be used by this project
+- Look into the skill definitions in `.appmod-kit/skills/skill-index.json` to find relevant skills that can be used by this project based on the skill description, **if custom skill has duplication with build-int skill, choose the custom skill**
 - **IMPORTANT**: Do NOT read individual skill files at this stage; Do Not include the skill detail in the tasks.
 
 **Template**:
@@ -129,8 +129,7 @@ graph TB
 
 **Requirements**:  Just summary the orignal migraton requirement from user input, if not provided, just leave it empty
 - [List WHAT needs to be accomplished, not HOW to accomplish it]
-- [Focus on outcomes and goals: "Enable message publishing to Azure Service Bus" not "Use Azure SDK to create ServiceBusClient"]
-- [Specify functional constraints: "Maintain message ordering" or "Support existing message schema"]
+- [Focus on major outcomes and goals: "Enable message publishing to Azure Service Bus" not "Use Azure SDK to create ServiceBusClient"]
 - [Do NOT specify: frameworks, libraries, SDKs, class names, authentication methods, or code patterns - skills will define these]
 
 **Environment Configration**: Get the applicaton deployment configuration from user input, if no input from user, left this section empty
@@ -143,7 +142,7 @@ graph TB
   - `[task-folder-name]`: A folder name derived from this task's name (lowercase, hyphenated)
   - Example: `.github/modernization/migrate-rabbitmq-servicebus/task-01-message-producer/task.md`
 
-**Referenced Skills**: [List skills from skill-index.json that are relevant, e.g., "rabbitmq-to-servicebus-mi"]
+**Referenced Skills**: [List skill path from skill-index.json that are relevant, e.g., ".appmod-kit/skills/rabbitmq-to-servicebus-mi.md", ".appmod-kit/custom/skills/rabbitmq-to-servicebus"]
 
 **Success Criteria**: Success Crtiera according to user input, if no input, user the default criteria
 - [Pass Build: Yes (default) - Project must compile successfully after migration]

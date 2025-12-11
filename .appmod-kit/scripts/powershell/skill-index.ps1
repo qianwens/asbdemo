@@ -173,7 +173,7 @@ function Get-CustomSkills {
                 }
                 
                 if ($name -and $description) {
-                    $relativePath = "$CustomSkillsPath/$($folder.Name)/skill.md".Replace("\\", "/")
+                    $relativePath = "$CustomSkillsPath/$($folder.Name)".Replace("\\", "/")
                     $skill = @{
                         path = $relativePath
                         name = $name

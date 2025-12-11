@@ -25,14 +25,56 @@ foreach ($skillFileName in $SkillFileNames) {
     
     if (Test-Path $skillFileName) {
         try {
-            $content = Get-Content -Path $skillFileName -Raw
-            $allContent += "### Skill: $skillFileName`n"
-            $allContent += $content + "`n"
-            $allContent += "---`n"
-            $copiedCount++
+            # Check if it's a directory
+            if (Test-Path $skillFileName -PathType Container) {
+                # It's a folder - copy the entire folder to the task folder
+                $taskFolder = Split-Path -Parent $TaskFilePath
+                $skillFolderName = Split-Path -Leaf $skillFileName
+                $destinationPath = Join-Path -Path $taskFolder -ChildPath $skillFolderName
+                
+                Write-Host "Copying folder: $skillFileName -> $destinationPath" -ForegroundColor Yellow
+                Copy-Item -Path $skillFileName -Destination $destinationPath -Recurse -Force
+                
+                # Check if there's a skill.md in the folder to include in content
+                $skillMdPath = Join-Path -Path $skillFileName -ChildPath "skill.md"
+                if (Test-Path $skillMdPath) {
+                    $content = Get-Content -Path $skillMdPath -Raw
+                    
+                    # Extract description from YAML front matter
+                    $description = ""
+                    if ($content -match '(?s)^---\s*\n(.*?)\n---') {
+                        $yamlContent = $Matches[1]
+                        foreach ($line in $yamlContent -split '\n') {
+                            if ($line -match '^\s*description:\s*(.+)$') {
+                                $description = $Matches[1].Trim()
+                                break
+                            }
+                        }
+                    }
+                    
+                    # Add instruction to use the skill.md in the task folder
+                    $relativeSkillPath = "$skillFolderName/skill.md"
+                    $allContent += "### Skill: $skillFolderName`n"
+                    if ($description) {
+                        $allContent += "**Description:** $description`n`n"
+                    }
+                    $allContent += "Use the skill instructions from: ``$relativeSkillPath```n"
+                    $allContent += "---`n"
+                }
+                
+                $copiedCount++
+            }
+            else {
+                # It's a file - read and append content
+                $content = Get-Content -Path $skillFileName -Raw
+                $allContent += "### Skill: $skillFileName`n"
+                $allContent += $content + "`n"
+                $allContent += "---`n"
+                $copiedCount++
+            }
         }
         catch {
-            Write-Error "Failed to read skill '$skillFileName': $_"
+            Write-Error "Failed to process skill '$skillFileName': $_"
             $failedCount++
         }
     }

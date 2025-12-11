@@ -1,0 +1,2 @@
+com\example\websocket\NewsWebSocket.class
+com\example\rabbitmq\RabbitMQConsumer.class

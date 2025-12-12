@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>RabbitMQ News Feed</title>
+    <title>AppMod News Feed</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,7 +84,7 @@
     </style>
 </head>
 <body>
-    <h1>RabbitMQ News Feed</h1>
+    <h1>AppMod News Feed</h1>
     
     <div id="status" class="status disconnected">
         Connecting to server...
@@ -111,7 +111,7 @@
             
             websocket.onopen = function(event) {
                 console.log('WebSocket connected');
-                statusDiv.textContent = 'Connected to RabbitMQ News Feed';
+                statusDiv.textContent = 'Connected to AppMod News Feed';
                 statusDiv.className = 'status connected';
             };
             

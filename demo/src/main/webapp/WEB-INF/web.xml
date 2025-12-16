@@ -7,6 +7,6 @@
   <display-name>RabbitMQ News Feed Application</display-name>
   
   <listener>
-    <listener-class>com.example.rabbitmq.RabbitMQConsumer</listener-class>
+    <listener-class>com.example.servicebus.ServiceBusConsumer</listener-class>
   </listener>
 </web-app>

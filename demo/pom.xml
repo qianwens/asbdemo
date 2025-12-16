@@ -27,11 +27,35 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- RabbitMQ -->
+    <!-- Mockito for unit testing -->
     <dependency>
-      <groupId>com.rabbitmq</groupId>
-      <artifactId>amqp-client</artifactId>
-      <version>5.16.0</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>3.12.4</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- Azure Service Bus SDK -->
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-messaging-servicebus</artifactId>
+      <version>7.14.0</version>
+    </dependency>
+    
+    <!-- Azure Service Bus (awesomeasb) -->
+    <dependency>
+      <groupId>com.awsomeasb</groupId>
+      <artifactId>awesomeasb</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/awesomeasb-1.0.0.jar</systemPath>
+    </dependency>
+    
+    <!-- SLF4J for logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>2.0.9</version>
     </dependency>
     
     <!-- WebSocket API -->

@@ -26,11 +26,25 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- RabbitMQ Client -->
     <dependency>
-      <groupId>com.rabbitmq</groupId>
-      <artifactId>amqp-client</artifactId>
-      <version>5.16.0</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.11.0</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- Azure Service Bus Client -->
+    <dependency>
+      <groupId>com.awsomeasb</groupId>
+      <artifactId>awesomeasb</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    
+    <!-- SLF4J Implementation -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>2.0.9</version>
     </dependency>
   </dependencies>
 

@@ -1,0 +1,21 @@
+{
+  "custom":   [[
+    {
+      "path": ".appmod-kit/custom/skills/rabbitmq-to-azureservicebus",
+      "description": "Migrate from RabbitMQ with AMQP to Azure Service Bus for messaging.",
+      "name": "Migrate from RabbitMQ to Azure Service Bus"
+    }
+  ]],
+  "built-in":   [
+    {
+      "path": ".appmod-kit/skills/amqp-rabbitmq-servicebus.md",
+      "description": "Migrate from RabbitMQ with AMQP to Azure Service Bus for messaging.",
+      "name": "Migrate from RabbitMQ(AMQP) to Azure Service Bus"
+    },
+    {
+      "path": ".appmod-kit/skills/s3-to-azure-blob-storage.md",
+      "description": "Migrate from AWS S3 to Azure Blob Storage for scalable and secure object storage in Azure.",
+      "name": "Migrate from AWS S3 to Azure Blob Storage"
+    }
+  ]
+}
